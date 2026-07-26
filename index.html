@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ff4fb8">
+  <meta name="description" content="A cinematic, interactive study of the pink Porsche 911 S/T, its road dynamics, design history and digital systems.">
+  <title>Porsche 911 — Pink Performance Study</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="is-loading">
+  <div class="intro-loader" id="intro-loader" role="status" aria-live="polite">
+    <div class="intro-loader__inner">
+      <span class="intro-loader__label">911 S/T / RUBY STAR NEO</span>
+      <div class="intro-loader__terminal" aria-hidden="true">
+        <span>&gt; WAKE VEHICLE SYSTEMS</span>
+        <span>&gt; CHECK REAR-AXLE CONTROL</span>
+        <span>&gt; RELEASE THE ROAD</span>
+      </div>
+      <div class="intro-loader__track"><span></span></div>
+      <small>Preparing the 911 experience</small>
+    </div>
+  </div>
+
+  <div class="site-background" aria-hidden="true">
+    <img
+      src="https://hips.hearstapps.com/hmg-prod/images/shore-blue-metallic-911-st-004-0k2a2199-65760d80d04fa.jpg?crop=0.909xw%3A0.681xh%3B0.0406xw%2C0.195xh&resize=1600%3A%2A"
+      data-fallback="assets/pink-road-fallback.jpg"
+      alt="">
+    <div class="site-background__wash"></div>
+    <div class="site-background__grain"></div>
+  </div>
+
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="Back to the beginning">
+      <span class="brand__mark">911</span>
+      <span class="brand__tag">PERFORMANCE STUDY</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="#history">History</a>
+      <a href="#car">Design</a>
+      <a href="#road">Road</a>
+      <a href="#models">Models</a>
+      <a href="#software">Software</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero section-shell">
+      <div class="hero__content reveal reveal-up" data-delay="0">
+        <p class="eyebrow">INTERACTIVE AUTOMOTIVE STUDY / 911 S/T</p>
+        <h1>Porsche<br>911.</h1>
+        <p class="hero__line">A pink, lightweight road-focused 911 built around a high-revving flat-six, a manual gearbox and the purest possible connection to the road.</p>
+        <div class="hero__actions">
+          <a class="text-link" href="#car">Reveal the car <span aria-hidden="true">↓</span></a>
+          <button class="hero-tour-button" id="hero-tour-start" type="button">Guided design tour</button>
+        </div>
+        <span class="scroll-cue" aria-hidden="true">SCROLL TO FEEL IT <i></i></span>
+      </div>
+
+      <div class="hero__numbers reveal reveal-up" data-delay="140" id="facts">
+        <div><strong>3.7 s</strong><span>0–100 km/h</span></div>
+        <div><strong>386 kW</strong><span>naturally aspirated</span></div>
+        <div><strong>1,380 kg</strong><span>DIN weight</span></div>
+        <div><strong>300 km/h</strong><span>top speed</span></div>
+      </div>
+    </section>
+
+    <section class="quick-story section-shell" aria-label="Overview">
+      <p class="eyebrow reveal reveal-up">WHY THE 911 ENDURES</p>
+      <div class="story-lines">
+        <p class="reveal reveal-left">The engine stays behind the rear axle.</p>
+        <p class="reveal reveal-right">The roofline still echoes the 1963 original.</p>
+        <p class="reveal reveal-left">Every generation adds speed without deleting identity.</p>
+        <p class="reveal reveal-right">Software now shapes sound, grip, aero and response.</p>
+      </div>
+    </section>
+
+    <section class="history-section section-shell" id="history">
+      <div class="section-heading reveal reveal-up">
+        <p class="eyebrow">ORIGIN / EVOLUTION</p>
+        <h2>One shape. Eight generations.</h2>
+        <p>The 911 has changed almost everything beneath the surface while protecting the proportions that made it recognisable.</p>
+      </div>
+
+      <div class="timeline" aria-label="Porsche 911 development timeline">
+        <article class="reveal reveal-left">
+          <time datetime="1963-09-12">12 SEP 1963</time>
+          <div><h3>The 901 debuts</h3><p>Porsche presents its new 2+2 sports car at the Frankfurt motor show as the successor to the 356.</p></div>
+        </article>
+        <article class="reveal reveal-right">
+          <time datetime="1964">1964</time>
+          <div><h3>The name becomes 911</h3><p>The production model adopts the number that will define Porsche’s longest-running sports-car lineage.</p></div>
+        </article>
+        <article class="reveal reveal-left">
+          <time datetime="1974">1974</time>
+          <div><h3>Turbo changes the formula</h3><p>The 911 Turbo brings forced induction, a wider body and a new level of road-car performance.</p></div>
+        </article>
+        <article class="reveal reveal-right">
+          <time datetime="1989">1989</time>
+          <div><h3>964 modernises the icon</h3><p>All-wheel drive, ABS, power steering and more advanced electronics arrive without abandoning the silhouette.</p></div>
+        </article>
+        <article class="reveal reveal-left">
+          <time datetime="1998">1998</time>
+          <div><h3>Water cooling arrives</h3><p>The 996 generation makes the largest technical step yet with a water-cooled flat-six and a new platform.</p></div>
+        </article>
+        <article class="reveal reveal-right">
+          <time datetime="2024">2024</time>
+          <div><h3>T-Hybrid enters production</h3><p>The Carrera GTS adds an electric turbocharger, a PDK-integrated motor and a compact 400-volt battery.</p></div>
+        </article>
+      </div>
+
+      <div class="origin-strip reveal reveal-up">
+        <span><b>Debut</b> Frankfurt, 1963</span>
+        <span><b>Origin</b> Stuttgart-Zuffenhausen</span>
+        <span><b>Layout</b> rear flat-six</span>
+        <span><b>Focus model</b> 911 S/T</span>
+      </div>
+    </section>
+
+    <section class="model-section section-shell" id="car">
+      <div class="section-heading reveal reveal-up">
+        <p class="eyebrow">MODEL 01 / THE COMPLETE CAR</p>
+        <h2>The shape that refuses to age.</h2>
+        <p>A full-car road photograph with subtle depth movement and five selectable systems—never cropped into an awkward close-up.</p>
+      </div>
+
+      <div class="model-layout">
+        <figure class="photo-model reveal reveal-left" data-tilt="car">
+          <div class="photo-model__scene">
+            <img
+              src="https://hips.hearstapps.com/hmg-prod/images/shore-blue-metallic-911-st-004-0k2a2199-65760d80d04fa.jpg?crop=0.909xw%3A0.681xh%3B0.0406xw%2C0.195xh&resize=1600%3A%2A"
+              data-fallback="assets/pink-road-fallback.jpg"
+              alt="Pink Porsche 911 S/T driving on a winding road">
+            <div class="photo-model__shade" aria-hidden="true"></div>
+            <div class="focus-ring" aria-hidden="true"></div>
+
+            <button class="hotspot hotspot--aero active" type="button" data-model="car" data-part="aero" aria-label="Learn about active aerodynamics">
+              <span></span><em>Aero</em>
+            </button>
+            <button class="hotspot hotspot--flat6" type="button" data-model="car" data-part="engine" aria-label="Learn about the rear flat-six engine">
+              <span></span><em>Flat-six</em>
+            </button>
+            <button class="hotspot hotspot--brakes" type="button" data-model="car" data-part="brakes" aria-label="Learn about the braking system">
+              <span></span><em>Brakes</em>
+            </button>
+            <button class="hotspot hotspot--cockpit" type="button" data-model="car" data-part="cockpit" aria-label="Learn about the digital cockpit">
+              <span></span><em>PCM</em>
+            </button>
+            <button class="hotspot hotspot--rearsteer" type="button" data-model="car" data-part="rearsteer" aria-label="Learn about rear-axle steering">
+              <span></span><em>Rear steer</em>
+            </button>
+          </div>
+        </figure>
+
+        <aside class="model-info reveal reveal-right" aria-live="polite">
+          <p class="model-info__number">01</p>
+          <h3 id="car-title">Active aerodynamics</h3>
+          <p id="car-copy">Vertical front flaps manage cooling and drag, opening only when the car needs more air or stability.</p>
+
+          <dl class="detail-list" id="car-details">
+            <div><dt>Body</dt><dd>2+2 coupé</dd></div>
+            <div><dt>Drive</dt><dd>Rear-wheel drive</dd></div>
+            <div><dt>Gearbox</dt><dd>6-speed GT manual</dd></div>
+            <div><dt>Weight</dt><dd>1,380 kg</dd></div>
+          </dl>
+          <p class="interaction-note">Drag across the image for depth. Select a marker to change the explanation.</p>
+          <div class="model-actions">
+            <button id="tour-start" type="button">Begin guided tour</button>
+          </div>
+        </aside>
+      </div>
+
+      <div class="tour-panel" id="tour-panel" hidden aria-live="polite">
+        <div>
+          <span class="tour-panel__step" id="tour-step">01 / 05</span>
+          <strong id="tour-heading">Active aerodynamics</strong>
+          <p id="tour-copy">Cooling openings and airflow devices react to speed and thermal demand.</p>
+        </div>
+        <div class="tour-panel__controls">
+          <button id="tour-prev" type="button" aria-label="Previous component">←</button>
+          <button id="tour-next" type="button">Next component</button>
+          <button id="tour-close" type="button">End tour</button>
+        </div>
+      </div>
+
+      <div class="fact-strip reveal reveal-up">
+        <span><b>Ruby Star Neo</b> brings the pink finish</span>
+        <span><b>Rear engine</b> creates unique traction</span>
+        <span><b>Manual gearbox</b> keeps it direct</span>
+        <span><b>Lightweight build</b> sharpens response</span>
+      </div>
+    </section>
+
+    <section class="interlude section-shell">
+      <p class="reveal reveal-up">Familiar shape.<br><span>Relentless change.</span><br>Instant response.</p>
+    </section>
+
+    
+    <section class="model-section section-shell road-section" id="road">
+      <div class="section-heading reveal reveal-up">
+        <p class="eyebrow">MODEL 02 / ROAD DYNAMICS</p>
+        <h2>Made to move, not sit in a box.</h2>
+        <p>The second view stays on the road: no engine opening, no fake machinery—just the full pink 911 in motion and the systems shaping its response.</p>
+      </div>
+      <div class="model-layout model-layout--reverse">
+        <figure class="photo-model road-photo reveal reveal-right" data-tilt="road">
+          <div class="photo-model__scene">
+            <img src="https://hips.hearstapps.com/hmg-prod/images/shore-blue-metallic-911-st-004-0k2a2199-65760d80d04fa.jpg?crop=0.909xw%3A0.681xh%3B0.0406xw%2C0.195xh&resize=1600%3A%2A" data-fallback="assets/pink-road-fallback.jpg" alt="Pink Porsche 911 S/T moving through a road corner">
+            <div class="photo-model__shade" aria-hidden="true"></div>
+            <div class="road-speed-lines" aria-hidden="true"></div>
+          </div>
+        </figure>
+        <aside class="model-info reveal reveal-left">
+          <p class="model-info__number">02</p>
+          <h3>Direct road connection</h3>
+          <p>The S/T uses lightweight construction, double-wishbone front suspension and no rear-axle steering to keep feedback natural and immediate.</p>
+          <dl class="detail-list">
+            <div><dt>Power</dt><dd>386 kW / 525 PS</dd></div>
+            <div><dt>Torque</dt><dd>465 Nm</dd></div>
+            <div><dt>Rev limit</dt><dd>9,000 rpm</dd></div>
+            <div><dt>Drive</dt><dd>Rear-wheel drive</dd></div>
+          </dl>
+          <p class="interaction-note">Move your pointer over the road shot for a subtle cinematic depth effect.</p>
+        </aside>
+      </div>
+      <div class="fact-strip reveal reveal-up">
+        <span><b>Double wishbone</b> sharpens the front axle</span>
+        <span><b>Short gearing</b> improves response</span>
+        <span><b>Magnesium wheels</b> reduce rotating mass</span>
+        <span><b>Road aero</b> favours balance over theatre</span>
+      </div>
+    </section>
+
+    <section class="compact-grid section-shell" aria-label="More Porsche 911 systems">
+      <article class="reveal reveal-up">
+        <span>01</span><h3>PASM</h3><p>Adaptive dampers change their response to road movement and selected drive mode.</p>
+      </article>
+      <article class="reveal reveal-up">
+        <span>02</span><h3>Rear steering</h3><p>Opposite steering at low speed aids agility; same-direction steering at speed adds stability.</p>
+      </article>
+      <article class="reveal reveal-up">
+        <span>03</span><h3>PDK</h3><p>Two clutches prepare the next ratio before the current gear is released.</p>
+      </article>
+      <article class="reveal reveal-up">
+        <span>04</span><h3>PTV Plus</h3><p>Brake intervention and a rear differential lock sharpen rotation and traction.</p>
+      </article>
+      <article class="reveal reveal-up">
+        <span>05</span><h3>PCCB</h3><p>Optional ceramic composite brakes reduce unsprung mass and resist repeated heat cycles.</p>
+      </article>
+      <article class="reveal reveal-up">
+        <span>06</span><h3>Matrix LED</h3><p>Four-point lighting graphics preserve the face while digital control shapes illumination.</p>
+      </article>
+    </section>
+
+    <section class="variant-section section-shell" id="models">
+      <div class="section-heading reveal reveal-up">
+        <p class="eyebrow">CURRENT 911 COMPARISON</p>
+        <h2>Same bloodline, different purpose.</h2>
+        <p>Select a model to compare performance and personality without leaving the page.</p>
+      </div>
+
+      <div class="variant-selector reveal reveal-up" role="tablist" aria-label="Porsche 911 models">
+        <button class="variant-tab" type="button" role="tab" aria-selected="false" data-variant="carrera">Carrera</button>
+        <button class="variant-tab" type="button" role="tab" aria-selected="false" data-variant="carreras">Carrera S</button>
+        <button class="variant-tab active" type="button" role="tab" aria-selected="true" data-variant="st">911 S/T</button>
+        <button class="variant-tab" type="button" role="tab" aria-selected="false" data-variant="gt3">GT3</button>
+        <button class="variant-tab" type="button" role="tab" aria-selected="false" data-variant="turbos">Turbo S</button>
+      </div>
+
+      <div class="variant-display reveal reveal-up" aria-live="polite">
+        <div class="variant-display__identity">
+          <span id="variant-kicker">RUBY STAR NEO / LIGHTWEIGHT</span>
+          <h3 id="variant-name">911 S/T</h3>
+          <p id="variant-summary">A 60th-anniversary special combining a naturally aspirated 4.0-litre flat-six with extreme lightweight construction.</p>
+          <div class="variant-scale car-scale" aria-hidden="true">
+            <span class="variant-scale__body" id="variant-scale-body"></span>
+            <span class="variant-scale__wing"></span>
+          </div>
+        </div>
+        <dl class="variant-stats">
+          <div><dt>0–100 km/h</dt><dd id="variant-length">3.7 s</dd></div>
+          <div><dt>Power</dt><dd id="variant-span">386 kW / 525 PS</dd></div>
+          <div><dt>Top speed</dt><dd id="variant-range">300 km/h</dd></div>
+          <div><dt>Drive</dt><dd id="variant-capacity">Rear-wheel drive</dd></div>
+          <div><dt>Engine</dt><dd id="variant-engine">4.0-litre naturally aspirated</dd></div>
+          <div><dt>Mission</dt><dd id="variant-mission">Pure road engagement</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="team-section section-shell" id="software">
+      <div class="section-heading reveal reveal-up">
+        <p class="eyebrow">SOFTWARE / DIGITAL ENGINEERING</p>
+        <h2>The invisible half of the car.</h2>
+        <p>Porsche does not publish its full proprietary codebase, but it publicly describes the interfaces, safety processes and validation methods surrounding modern vehicle software.</p>
+      </div>
+
+      <div class="team-lead reveal reveal-up">
+        <span>PORSCHE DIGITAL INTERACTION</span>
+        <p>The current 911 combines a configurable digital instrument cluster, Porsche Communication Management, connected services and vehicle-control software while keeping the driver at the centre.</p>
+      </div>
+
+      <div class="team-grid">
+        <article class="reveal reveal-left">
+          <span>01 / PCM</span>
+          <h3>Communication Management</h3>
+          <p>The central infotainment system brings navigation, media, phone integration and vehicle settings into one interface.</p>
+        </article>
+        <article class="reveal reveal-right">
+          <span>02 / INTERFACE</span>
+          <h3>Porsche DI</h3>
+          <p>Customisable widgets, a digital cluster and context-aware controls create the visible layer of the car’s operating experience.</p>
+        </article>
+        <article class="reveal reveal-left">
+          <span>03 / CONNECTED</span>
+          <h3>App Centre + Voice Pilot</h3>
+          <p>Apps, natural-language control and My Porsche remote services connect the cockpit with cloud-backed features.</p>
+        </article>
+        <article class="reveal reveal-right">
+          <span>04 / SAFETY</span>
+          <h3>ISO 26262</h3>
+          <p>Safety-related electronics are developed and verified with processes designed around automotive functional safety.</p>
+        </article>
+        <article class="reveal reveal-left">
+          <span>05 / PROCESS</span>
+          <h3>Automotive SPICE</h3>
+          <p>Requirements, architecture, implementation, verification and traceability are structured so complex systems can be audited.</p>
+        </article>
+        <article class="reveal reveal-right">
+          <span>06 / TESTING</span>
+          <h3>SIL, HIL and vehicle tests</h3>
+          <p>Software can be tested in simulation, against real control hardware and finally inside complete vehicles before release.</p>
+        </article>
+      </div>
+
+      <div class="family-line reveal reveal-up" aria-label="Examples of software-controlled Porsche systems">
+        <p><b>Software-controlled systems</b></p>
+        <span>PCM</span><span>PASM</span><span>PTV Plus</span><span>rear steering</span><span>active aero</span><span>hybrid control</span><span>driver assistance</span>
+      </div>
+    </section>
+
+    <section class="closing section-shell">
+      <p class="eyebrow reveal reveal-up">END OF STUDY</p>
+      <h2 class="reveal reveal-up">A classic silhouette running modern logic.</h2>
+      <p class="reveal reveal-up">Explore the body, open the rear deck, trace the T-Hybrid system and follow the software that turns mechanical parts into one responsive car.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p class="footer-sources">Research: official Porsche 911 S/T specifications, Porsche Newsroom history, chassis information, PCM, Porsche Digital Interaction and Porsche Engineering software-development publications.</p>
+    <p class="footer-disclaimer">Independent educational concept. Not affiliated with or endorsed by Porsche AG. Porsche, 911 and related names and marks remain the property of their respective owners. Official press images are loaded from Porsche Newsroom; local fallback art is included for offline viewing.</p>
+    <p class="footer-signature">–Maroof</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
