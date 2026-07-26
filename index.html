@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en" data-theme="red">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#09090b" />
+  <meta name="description" content="A cinematic interactive study of the Porsche 911, its engineering and publicly documented digital systems." />
+  <title>PORSCHE 911 — Pulse</title>
+  <style>
+    :root {
+      --accent: #ff2547;
+      --accent-2: #ff6a7f;
+      --accent-soft: rgba(255,37,71,.14);
+      --accent-glow: rgba(255,37,71,.42);
+      --bg: #080809;
+      --panel: rgba(16,16,18,.72);
+      --panel-strong: rgba(12,12,14,.94);
+      --text: #f7f3ed;
+      --muted: #aaa5a0;
+      --line: rgba(255,255,255,.12);
+      --radius: 22px;
+      color-scheme: dark;
+    }
+    html[data-theme="pink"] {
+      --accent: #ff4fc8;
+      --accent-2: #ff91de;
+      --accent-soft: rgba(255,79,200,.15);
+      --accent-glow: rgba(255,79,200,.42);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: var(--bg); }
+    body {
+      margin: 0;
+      min-width: 320px;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; }
+    a { color: inherit; }
+    img { max-width: 100%; display: block; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+    .ambient {
+      position: fixed;
+      inset: -7%;
+      z-index: -3;
+      overflow: hidden;
+      pointer-events: none;
+      background: #0a090b;
+    }
+    .ambient img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: blur(32px) saturate(.8) brightness(.28);
+      transform: scale(1.08);
+      opacity: .72;
+    }
+    .ambient::after {
+      content: ""; position:absolute; inset:0;
+      background:
+        radial-gradient(circle at 50% 15%, transparent 0 18%, rgba(8,8,9,.42) 55%, #080809 88%),
+        linear-gradient(180deg, rgba(8,8,9,.25), #080809 78%);
+    }
+    .grain { position: fixed; inset:0; z-index:50; pointer-events:none; opacity:.05; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E"); }
+    .progress { position: fixed; top:0; left:0; z-index:60; height:2px; width:0; background:var(--accent); box-shadow:0 0 14px var(--accent); }
+
+    .boot {
+      position: fixed; inset:0; z-index:100;
+      display:grid; place-items:center;
+      padding:24px;
+      background:#060607;
+      transition: opacity .75s ease, visibility .75s ease;
+    }
+    .boot.done { opacity:0; visibility:hidden; }
+    .boot-shell { width:min(680px, 92vw); }
+    .boot-lines { min-height:120px; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color:#b4b0ac; font-size:12px; letter-spacing:.08em; }
+    .boot-line { opacity:0; transform:translateY(6px); animation:terminalIn .35s forwards; }
+    .boot-line strong { color:var(--accent); font-weight:600; }
+    .boot-bar { height:2px; background:#232326; overflow:hidden; margin-top:18px; }
+    .boot-bar i { display:block; height:100%; width:0; background:var(--accent); box-shadow:0 0 16px var(--accent); animation:load 2.3s cubic-bezier(.22,.75,.25,1) forwards; }
+    .boot-word { margin-top:26px; font-size:clamp(36px, 9vw, 84px); letter-spacing:.18em; font-weight:300; opacity:0; animation:wordIn .8s 1.5s forwards; }
+    @keyframes terminalIn { to { opacity:1; transform:none; } }
+    @keyframes load { to { width:100%; } }
+    @keyframes wordIn { to { opacity:1; letter-spacing:.11em; } }
+
+    .nav-wrap { position:sticky; top:0; z-index:40; padding:12px clamp(12px,3vw,28px); }
+    nav {
+      width:min(1180px,100%); margin:auto;
+      display:flex; align-items:center; justify-content:space-between; gap:18px;
+      padding:10px 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(8,8,9,.58);
+      backdrop-filter: blur(20px) saturate(140%);
+    }
+    .brand { text-decoration:none; font-size:12px; letter-spacing:.24em; font-weight:650; white-space:nowrap; }
+    .brand b { color:var(--accent); }
+    .nav-links { display:flex; align-items:center; gap:4px; overflow:auto; scrollbar-width:none; }
+    .nav-links::-webkit-scrollbar { display:none; }
+    .nav-links a { text-decoration:none; color:var(--muted); font-size:11px; letter-spacing:.06em; padding:7px 10px; border-radius:999px; white-space:nowrap; transition:.25s; }
+    .nav-links a:hover, .nav-links a.active { color:var(--text); background:var(--accent-soft); }
+    .theme-toggle { flex:none; border:1px solid var(--line); background:#121215; color:var(--text); padding:7px 10px; border-radius:999px; cursor:pointer; font-size:11px; }
+    .theme-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow:0 0 9px var(--accent); margin-right:6px; }
+
+    main { width:min(1180px, 100%); margin:auto; padding:0 clamp(14px,3vw,30px) 80px; }
+    section { scroll-margin-top:90px; }
+    .hero { min-height:calc(100vh - 76px); display:grid; align-items:center; padding:34px 0 54px; }
+    .hero-grid { display:grid; grid-template-columns:.82fr 1.18fr; gap:clamp(18px,4vw,52px); align-items:center; }
+    .eyebrow { color:var(--accent-2); font-family:ui-monospace,monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; }
+    h1,h2,h3,p { margin-top:0; }
+    h1 { margin:12px 0 16px; font-family:Georgia, "Times New Roman", serif; font-weight:500; font-size:clamp(58px,10vw,128px); line-height:.82; letter-spacing:-.055em; }
+    h1 span { display:block; font-family:Inter, sans-serif; font-size:.23em; line-height:1.4; letter-spacing:.32em; font-weight:400; color:var(--muted); margin-left:.3em; margin-top:.7em; }
+    .hero-copy { max-width:500px; color:#d1ccc5; font-size:clamp(14px,1.6vw,17px); }
+    .hero-actions { display:flex; flex-wrap:wrap; gap:9px; margin-top:24px; }
+    .btn { border:1px solid var(--line); background:rgba(15,15,17,.8); color:var(--text); padding:11px 15px; border-radius:999px; cursor:pointer; transition:.25s; font-weight:600; font-size:12px; }
+    .btn:hover { transform:translateY(-2px); border-color:rgba(255,255,255,.25); }
+    .btn.primary { background:var(--accent); color:white; border-color:transparent; box-shadow:0 10px 35px var(--accent-glow); }
+    .btn.primary:active { transform:scale(.98); }
+    .hero-media { position:relative; min-width:0; }
+    .photo-frame {
+      position:relative; border:1px solid var(--line); border-radius:28px; overflow:hidden;
+      min-height:clamp(360px,60vw,690px); background:#131316;
+      box-shadow:0 40px 100px rgba(0,0,0,.5);
+      isolation:isolate;
+    }
+    .photo-frame img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; transition:filter .9s ease, transform 1.1s cubic-bezier(.2,.8,.2,1), opacity .5s; }
+    .photo-frame .real-photo { filter:saturate(1.05) contrast(1.06) brightness(.82); }
+    .photo-frame:hover .real-photo { transform:scale(1.025); filter:saturate(1.15) contrast(1.08) brightness(.92); }
+    .photo-frame::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.03) 48%,rgba(0,0,0,.74)); pointer-events:none; z-index:1; }
+    .photo-tag { position:absolute; z-index:2; left:16px; bottom:15px; right:16px; display:flex; align-items:flex-end; justify-content:space-between; gap:14px; font-size:10px; letter-spacing:.12em; color:#ddd6ce; }
+    .car-status { display:flex; gap:6px; align-items:center; }
+    .status-led { width:7px; height:7px; border-radius:50%; background:#555; transition:.25s; }
+    .engine-on .status-led { background:var(--accent); box-shadow:0 0 12px var(--accent); }
+    .hero-specs { position:absolute; z-index:3; top:14px; right:14px; display:grid; gap:6px; }
+    .mini-spec { border:1px solid var(--line); background:rgba(5,5,6,.58); backdrop-filter:blur(12px); border-radius:12px; padding:7px 10px; text-align:right; }
+    .mini-spec b { display:block; font-size:14px; }
+    .mini-spec small { color:var(--muted); font-size:8px; text-transform:uppercase; letter-spacing:.12em; }
+    .rev-panel { margin-top:10px; display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; }
+    .rev-track { height:8px; border-radius:99px; background:#1d1d20; overflow:hidden; border:1px solid var(--line); }
+    .rev-fill { height:100%; width:6%; background:linear-gradient(90deg,var(--accent-2),var(--accent)); box-shadow:0 0 18px var(--accent); transition:width .09s linear; }
+    .rpm { font-family:ui-monospace,monospace; font-size:11px; color:var(--muted); min-width:72px; text-align:right; }
+
+    .strip { display:grid; grid-template-columns:repeat(5,1fr); gap:1px; margin:16px 0 96px; border:1px solid var(--line); border-radius:18px; overflow:hidden; background:var(--line); }
+    .stat { background:rgba(12,12,14,.82); padding:17px 15px; min-width:0; }
+    .stat b { display:block; font-family:Georgia,serif; font-weight:400; font-size:clamp(20px,3vw,32px); }
+    .stat small { color:var(--muted); font-size:9px; text-transform:uppercase; letter-spacing:.12em; }
+
+    .section-head { display:grid; grid-template-columns:.85fr 1.15fr; gap:24px; align-items:end; margin-bottom:24px; }
+    .section-head h2 { font-family:Georgia,serif; font-size:clamp(36px,6vw,72px); line-height:.92; letter-spacing:-.045em; font-weight:400; margin-bottom:0; }
+    .section-head p { max-width:590px; color:var(--muted); margin-bottom:3px; }
+    .section { padding:84px 0; }
+
+    .reveal { opacity:0; transform:translateY(22px); filter:blur(8px); transition:opacity .85s ease, transform .85s cubic-bezier(.2,.8,.2,1), filter .85s ease; }
+    .reveal.in { opacity:1; transform:none; filter:none; }
+    .delay-1 { transition-delay:.08s; } .delay-2 { transition-delay:.16s; } .delay-3 { transition-delay:.24s; }
+
+    .mechanics-grid { display:grid; grid-template-columns:1.25fr .75fr; gap:14px; }
+    .media-card, .info-card { border:1px solid var(--line); background:var(--panel); border-radius:var(--radius); overflow:hidden; }
+    .technical-media { position:relative; min-height:540px; background:#111; }
+    .technical-media img { width:100%; height:100%; position:absolute; inset:0; object-fit:cover; filter:brightness(.68) contrast(1.07); transition:transform .8s ease, filter .45s ease; }
+    .technical-media.active img { filter:brightness(.55) contrast(1.12); transform:scale(1.018); }
+    .hotspot { position:absolute; z-index:4; width:28px; height:28px; border:0; border-radius:50%; background:rgba(255,255,255,.13); color:white; cursor:pointer; box-shadow:0 0 0 1px rgba(255,255,255,.44),0 0 0 7px rgba(0,0,0,.16); transition:.25s; }
+    .hotspot::before { content:""; position:absolute; inset:9px; border-radius:50%; background:var(--accent); box-shadow:0 0 12px var(--accent); }
+    .hotspot:hover,.hotspot.active { transform:scale(1.18); background:var(--accent-soft); }
+    .hotspot.engine { left:24%; top:63%; } .hotspot.pdk { left:45%; top:57%; } .hotspot.axle { right:18%; top:33%; } .hotspot.brakes { right:7%; top:51%; } .hotspot.aero { left:12%; top:26%; }
+    .media-label { position:absolute; left:14px; top:14px; z-index:3; padding:7px 9px; border-radius:999px; background:rgba(6,6,7,.62); border:1px solid var(--line); backdrop-filter:blur(10px); font-size:9px; letter-spacing:.14em; text-transform:uppercase; }
+    .info-card { padding:24px; display:flex; flex-direction:column; justify-content:space-between; min-height:540px; }
+    .info-card .index { font-family:ui-monospace,monospace; color:var(--accent); font-size:11px; }
+    .info-card h3 { font-family:Georgia,serif; font-weight:400; font-size:clamp(30px,4vw,48px); line-height:1; margin:16px 0; }
+    .info-card p { color:#c7c1ba; }
+    .facts { display:grid; gap:0; border-top:1px solid var(--line); margin-top:24px; }
+    .fact { display:grid; grid-template-columns:110px 1fr; gap:12px; padding:11px 0; border-bottom:1px solid var(--line); font-size:12px; }
+    .fact span { color:var(--muted); }
+
+    .deck-shell { display:grid; grid-template-columns:.9fr 1.1fr; gap:14px; }
+    .deck-copy { padding:26px; border:1px solid var(--line); border-radius:var(--radius); background:var(--panel); }
+    .deck-copy h3 { font-family:Georgia,serif; font-size:45px; font-weight:400; line-height:1; }
+    .deck-copy p { color:var(--muted); }
+    .deck-view { min-height:480px; position:relative; border-radius:var(--radius); overflow:hidden; border:1px solid var(--line); background:#101012; }
+    .deck-view img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:clip-path 1s cubic-bezier(.2,.8,.2,1),filter .6s; }
+    .deck-view .car-layer { z-index:2; clip-path:inset(0 0 0 0 round 20px); }
+    .deck-view.open .car-layer { clip-path:inset(0 0 72% 0 round 20px); filter:blur(5px) brightness(.45); }
+    .deck-view .engine-layer { z-index:1; filter:contrast(1.1) saturate(.8); }
+    .deck-caption { position:absolute; z-index:3; inset:auto 15px 14px; display:flex; justify-content:space-between; align-items:center; gap:14px; font-size:10px; letter-spacing:.1em; text-transform:uppercase; }
+
+    .digital-grid { display:grid; grid-template-columns:.8fr 1.2fr; gap:14px; align-items:stretch; }
+    .pcm-shell { border:1px solid var(--line); border-radius:30px; padding:10px; background:#020203; min-height:520px; box-shadow:0 25px 70px rgba(0,0,0,.38); }
+    .pcm-screen { height:100%; border-radius:22px; overflow:hidden; background:radial-gradient(circle at 70% 25%,var(--accent-soft),transparent 30%),#0d0d0f; border:1px solid #29292e; display:grid; grid-template-rows:auto 1fr auto; }
+    .pcm-top { display:flex; justify-content:space-between; padding:12px 15px; font-size:10px; color:#c6c0b9; border-bottom:1px solid var(--line); }
+    .pcm-body { padding:16px; }
+    .pcm-title { font-family:Georgia,serif; font-size:34px; font-weight:400; }
+    .pcm-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:16px; }
+    .pcm-tile { min-height:88px; border:1px solid var(--line); border-radius:14px; padding:12px; background:rgba(255,255,255,.025); cursor:pointer; transition:.25s; text-align:left; color:var(--text); }
+    .pcm-tile:hover,.pcm-tile.active { border-color:var(--accent); background:var(--accent-soft); }
+    .pcm-tile b { display:block; font-size:12px; margin-bottom:4px; }
+    .pcm-tile small { color:var(--muted); font-size:9px; }
+    .pcm-tabs { display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--line); }
+    .pcm-tab { border:0; background:transparent; color:var(--muted); padding:12px 4px; cursor:pointer; font-size:9px; }
+    .pcm-tab.active { color:var(--accent-2); }
+    .digital-copy { border:1px solid var(--line); border-radius:var(--radius); background:var(--panel); padding:26px; }
+    .digital-copy h3 { font-family:Georgia,serif; font-size:42px; line-height:1; font-weight:400; }
+    .digital-copy .callout { padding:14px; border-left:2px solid var(--accent); background:var(--accent-soft); border-radius:0 12px 12px 0; color:#d8d2cb; margin:18px 0; }
+    .stack-list { display:grid; gap:8px; }
+    .stack-row { display:grid; grid-template-columns:34px 1fr; gap:11px; padding:10px 0; border-bottom:1px solid var(--line); }
+    .stack-row i { font-style:normal; color:var(--accent); font-family:ui-monospace,monospace; }
+    .stack-row b { display:block; font-size:12px; }
+    .stack-row span { color:var(--muted); font-size:11px; }
+
+    .process { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:22px; }
+    .process-step { min-height:150px; padding:13px 10px; border:1px solid var(--line); border-radius:14px; background:rgba(12,12,14,.7); position:relative; overflow:hidden; }
+    .process-step::after { content:""; position:absolute; left:0; bottom:0; height:2px; width:0; background:var(--accent); transition:width .8s ease; }
+    .process-step.in::after { width:100%; }
+    .process-step i { color:var(--accent); font-family:ui-monospace,monospace; font-size:9px; font-style:normal; }
+    .process-step b { display:block; margin:24px 0 7px; font-size:11px; }
+    .process-step span { color:var(--muted); font-size:9px; line-height:1.45; }
+
+    .gallery { display:grid; grid-template-columns:1.2fr .8fr; grid-template-rows:260px 260px; gap:10px; }
+    .gallery figure { margin:0; position:relative; overflow:hidden; border:1px solid var(--line); border-radius:18px; background:#111; }
+    .gallery figure:first-child { grid-row:1 / 3; }
+    .gallery img { width:100%; height:100%; object-fit:cover; filter:brightness(.75) saturate(.9); transition:.8s; }
+    .gallery figure:hover img { transform:scale(1.03); filter:brightness(.92) saturate(1.05); }
+    .gallery figcaption { position:absolute; bottom:10px; left:10px; right:10px; padding:8px 10px; border:1px solid var(--line); background:rgba(8,8,9,.58); backdrop-filter:blur(12px); border-radius:11px; font-size:9px; letter-spacing:.09em; text-transform:uppercase; }
+
+    .timeline { border-top:1px solid var(--line); }
+    .timeline-row { display:grid; grid-template-columns:90px 150px 1fr; gap:20px; padding:16px 0; border-bottom:1px solid var(--line); }
+    .timeline-row time { font-family:Georgia,serif; font-size:25px; color:var(--accent-2); }
+    .timeline-row b { font-size:12px; padding-top:7px; }
+    .timeline-row p { color:var(--muted); font-size:12px; margin:4px 0 0; }
+
+    footer { margin-top:80px; padding:28px 0 10px; border-top:1px solid var(--line); color:#77736e; font-size:9px; line-height:1.7; }
+    .footer-grid { display:grid; grid-template-columns:1fr auto; gap:22px; }
+    .credits a { color:#9d9892; }
+
+    @media (max-width: 900px) {
+      .hero-grid, .section-head, .mechanics-grid, .deck-shell, .digital-grid { grid-template-columns:1fr; }
+      .hero { min-height:auto; padding-top:22px; }
+      .hero-copy { max-width:680px; }
+      .photo-frame { min-height:620px; }
+      .strip { grid-template-columns:repeat(5,minmax(110px,1fr)); overflow:auto; }
+      .info-card { min-height:auto; }
+      .process { grid-template-columns:repeat(4,1fr); }
+      .timeline-row { grid-template-columns:72px 120px 1fr; }
+    }
+    @media (max-width: 620px) {
+      body { font-size:13px; }
+      .nav-wrap { padding:8px; }
+      nav { border-radius:16px; padding:8px 9px; }
+      .brand { font-size:10px; }
+      .nav-links { display:none; }
+      main { padding-inline:10px; }
+      .hero { padding-top:10px; }
+      h1 { font-size:72px; margin-top:9px; }
+      .hero-grid { gap:14px; }
+      .photo-frame { min-height:430px; border-radius:20px; }
+      .hero-specs { top:9px; right:9px; }
+      .mini-spec { padding:6px 8px; }
+      .section { padding:58px 0; }
+      .section-head { gap:10px; margin-bottom:16px; }
+      .section-head h2 { font-size:45px; }
+      .strip { margin-bottom:58px; border-radius:14px; }
+      .stat { padding:13px 12px; }
+      .technical-media { min-height:390px; }
+      .info-card, .deck-copy, .digital-copy { padding:18px; }
+      .deck-view { min-height:390px; }
+      .pcm-shell { min-height:500px; }
+      .process { grid-template-columns:repeat(2,1fr); }
+      .process-step { min-height:125px; }
+      .gallery { grid-template-columns:1fr; grid-template-rows:280px 220px 220px; }
+      .gallery figure:first-child { grid-row:auto; }
+      .timeline-row { grid-template-columns:62px 1fr; gap:10px; }
+      .timeline-row p { grid-column:2; }
+      .footer-grid { grid-template-columns:1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; }
+      .reveal { opacity:1; transform:none; filter:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="boot" id="boot" aria-hidden="true">
+    <div class="boot-shell">
+      <div class="boot-lines">
+        <div class="boot-line" style="animation-delay:.1s">&gt; INITIALIZING DRIVER EXPERIENCE...</div>
+        <div class="boot-line" style="animation-delay:.42s">&gt; PCM NETWORK <strong>ONLINE</strong></div>
+        <div class="boot-line" style="animation-delay:.74s">&gt; BOXER SYSTEM <strong>READY</strong></div>
+        <div class="boot-line" style="animation-delay:1.06s">&gt; IGNITING <strong>PASSION</strong></div>
+      </div>
+      <div class="boot-bar"><i></i></div>
+      <div class="boot-word">PORSCHE</div>
+    </div>
+  </div>
+
+  <div class="ambient" aria-hidden="true">
+    <img src="https://www.motozite.com/blog/wp-content/uploads/2025/12/Porsche_911_Carrera_Hero-Angle_GuardsRedDreams-1024x576.jpg" data-fallback="assets/fallback-bg.jpg" alt="" />
+  </div>
+  <div class="grain"></div>
+  <div class="progress" id="progress"></div>
+
+  <div class="nav-wrap">
+    <nav aria-label="Primary navigation">
+      <a href="#top" class="brand">PORSCHE <b>911</b></a>
+      <div class="nav-links">
+        <a href="#engineering">Engineering</a>
+        <a href="#powertrain">Powertrain</a>
+        <a href="#digital">Digital</a>
+        <a href="#process">Software</a>
+        <a href="#legacy">Legacy</a>
+      </div>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch between red and pink accent themes"><span class="theme-dot"></span><span id="themeLabel">Pink mode</span></button>
+    </nav>
+  </div>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="reveal in">
+          <div class="eyebrow">992.2 / DIGITAL PERFORMANCE STUDY</div>
+          <h1>911<span>TIMELESS MACHINE. RECODED.</span></h1>
+          <p class="hero-copy">A cinematic, interactive look at the shape, powertrain and publicly documented software systems behind the modern Porsche 911.</p>
+          <div class="hero-actions">
+            <button class="btn primary" id="startBtn" type="button">Start engine</button>
+            <button class="btn" id="revBtn" type="button">Hold to rev</button>
+            <a class="btn" href="#powertrain">Reveal the engine</a>
+          </div>
+          <div class="rev-panel" aria-live="polite">
+            <div class="rev-track"><div class="rev-fill" id="revFill"></div></div>
+            <div class="rpm" id="rpmReadout">900 RPM</div>
+          </div>
+        </div>
+
+        <div class="hero-media reveal delay-1" id="heroMedia">
+          <div class="photo-frame">
+            <img class="real-photo" src="https://www.motozite.com/blog/wp-content/uploads/2025/12/Porsche_911_Carrera_Hero-Angle_GuardsRedDreams-1024x576.jpg" data-fallback="assets/fallback-hero.jpg" alt="Red Porsche 911 Carrera photographed from the front three-quarter angle" />
+            <div class="hero-specs" aria-label="Key specifications">
+              <div class="mini-spec"><b>398 kW</b><small>System power</small></div>
+              <div class="mini-spec"><b>3.0 s</b><small>0–100 km/h</small></div>
+              <div class="mini-spec"><b>312 km/h</b><small>Top speed</small></div>
+            </div>
+            <div class="photo-tag">
+              <span>911 CARRERA GTS / T-HYBRID FOCUS</span>
+              <span class="car-status"><i class="status-led"></i><span id="engineStatus">ENGINE OFF</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="strip reveal">
+      <div class="stat"><b>3.6 L</b><small>Boxer six</small></div>
+      <div class="stat"><b>532 hp</b><small>Total output</small></div>
+      <div class="stat"><b>12.6″</b><small>Digital cluster</small></div>
+      <div class="stat"><b>10.9″</b><small>PCM display</small></div>
+      <div class="stat"><b>400 V</b><small>Hybrid system</small></div>
+    </div>
+
+    <section class="section" id="engineering">
+      <div class="section-head reveal">
+        <div><div class="eyebrow">01 / ENGINEERING</div><h2>Every part has a purpose.</h2></div>
+        <p>Tap the highlighted components. The image is a technical view of the current 911 Carrera GTS powertrain layout; the explanations stay short, accurate and focused.</p>
+      </div>
+      <div class="mechanics-grid">
+        <div class="media-card technical-media reveal" id="technicalMedia">
+          <img src="https://newsroom.porsche.com/.imaging/mte/porsche-templating-theme/teaser_720x406x2/dam/pnr/2024/Products/992-II/Technical/OVERVIEW_1024x659_A3_RGB.jpg/jcr%3Acontent/OVERVIEW_1024x659_A3_RGB.jpg" data-fallback="assets/fallback-detail.jpg" alt="Technical illustration of the Porsche 911 Carrera GTS drivetrain and axles" />
+          <div class="media-label">Interactive component map</div>
+          <button class="hotspot engine active" data-part="engine" type="button"><span class="sr-only">Boxer engine</span></button>
+          <button class="hotspot pdk" data-part="pdk" type="button"><span class="sr-only">PDK transmission</span></button>
+          <button class="hotspot axle" data-part="axle" type="button"><span class="sr-only">Hybrid and front axle systems</span></button>
+          <button class="hotspot brakes" data-part="brakes" type="button"><span class="sr-only">Brakes and chassis</span></button>
+          <button class="hotspot aero" data-part="aero" type="button"><span class="sr-only">Active aerodynamics</span></button>
+        </div>
+        <article class="info-card reveal delay-1" aria-live="polite">
+          <div>
+            <div class="index" id="partIndex">01 / POWER UNIT</div>
+            <h3 id="partTitle">3.6-litre boxer six</h3>
+            <p id="partBody">The horizontally opposed engine keeps the mass low and compact at the rear. In the Carrera GTS T-Hybrid, Porsche pairs it with an electrically assisted turbocharger and an electric motor inside the PDK transmission.</p>
+          </div>
+          <div class="facts" id="partFacts">
+            <div class="fact"><span>Layout</span><b>Rear-mounted flat-six</b></div>
+            <div class="fact"><span>Output</span><b>357 kW engine / 398 kW system</b></div>
+            <div class="fact"><span>Character</span><b>Fast response, low centre of gravity</b></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="powertrain">
+      <div class="section-head reveal">
+        <div><div class="eyebrow">02 / POWERTRAIN</div><h2>Lift the rear deck.</h2></div>
+        <p>The 911 stores luggage beneath the front hood; the engine lives behind the cabin. Use the control to fade the body away and expose the flat-six power unit.</p>
+      </div>
+      <div class="deck-shell">
+        <div class="deck-copy reveal">
+          <div class="eyebrow">REAR-ENGINE ARCHITECTURE</div>
+          <h3>Beauty under pressure.</h3>
+          <p>The modern 911 Carrera uses a twin-turbo flat-six. The GTS T-Hybrid adds a compact high-voltage system, an electric motor in the PDK and an electrically driven exhaust-gas turbocharger.</p>
+          <button class="btn primary" id="deckBtn" type="button" aria-expanded="false">Open rear deck</button>
+          <p style="font-size:10px;margin-top:15px">The visual transition is photographic rather than a 3D model, keeping the page fast on phones.</p>
+        </div>
+        <div class="deck-view reveal delay-1" id="deckView">
+          <img class="engine-layer" src="https://newsroom.porsche.com/.imaging/mte/porsche-templating-theme/teaser_720x406x2/dam/pnr/2024/Products/992-II/Technical/image9_1024x576_A3_RGB.jpg/jcr%3Acontent/image9_1024x576_A3_RGB.jpg" data-fallback="assets/fallback-engine.jpg" alt="Porsche 911 Carrera GTS boxer engine and exhaust system" />
+          <img class="car-layer" src="https://newsroom.porsche.com/.imaging/mte/porsche-templating-theme/teaser_720x406x2/dam/pnr/2024/Products/992-II/Studio/24_PAG_G188_911_Vorshooting_1006__A3_RGB.jpg/jcr%3Acontent/24_PAG_G188_911_Vorshooting_1006__A3_RGB.jpg" data-fallback="assets/fallback-detail.jpg" alt="Rear of a Porsche 911 Carrera GTS" />
+          <div class="deck-caption"><span id="deckLabel">BODY SEALED</span><span>REAR POWER UNIT</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="digital">
+      <div class="section-head reveal">
+        <div><div class="eyebrow">03 / DIGITAL</div><h2>The cockpit has its own pulse.</h2></div>
+        <p>The current 911 uses Porsche Communication Management (PCM), a 10.9-inch central display and a 12.6-inch digital instrument cluster. Explore the interface mock-up below.</p>
+      </div>
+      <div class="digital-grid">
+        <div class="pcm-shell reveal">
+          <div class="pcm-screen">
+            <div class="pcm-top"><span>PORSCHE COMMUNICATION MANAGEMENT</span><span id="pcmClock">09:11</span></div>
+            <div class="pcm-body">
+              <div class="eyebrow" id="pcmMode">HOME / DRIVER PROFILE</div>
+              <div class="pcm-title" id="pcmTitle">Good evening.</div>
+              <div class="pcm-grid" id="pcmTiles">
+                <button class="pcm-tile active" type="button"><b>Navigation</b><small>Online route guidance + traffic</small></button>
+                <button class="pcm-tile" type="button"><b>Media</b><small>Native streaming and connected audio</small></button>
+                <button class="pcm-tile" type="button"><b>Vehicle</b><small>Drive, chassis and assistance settings</small></button>
+                <button class="pcm-tile" type="button"><b>My Porsche</b><small>Porsche ID and remote services</small></button>
+              </div>
+            </div>
+            <div class="pcm-tabs">
+              <button class="pcm-tab active" data-pcm="home" type="button">HOME</button>
+              <button class="pcm-tab" data-pcm="drive" type="button">DRIVE</button>
+              <button class="pcm-tab" data-pcm="apps" type="button">APPS</button>
+              <button class="pcm-tab" data-pcm="system" type="button">SYSTEM</button>
+            </div>
+          </div>
+        </div>
+        <article class="digital-copy reveal delay-1">
+          <div class="eyebrow">PUBLICLY DOCUMENTED 911 DIGITAL STACK</div>
+          <h3>PCM, connectivity and vehicle control.</h3>
+          <p>Porsche describes the 911’s user-facing platform as Porsche Communication Management. It includes navigation, media, voice features, Porsche Connect services, wireless Apple CarPlay and Android Auto, native apps and online software/map updates.</p>
+          <div class="callout"><b>Important accuracy note:</b> Porsche has publicly confirmed Android Automotive OS for newer platforms such as the electric Macan. Its public 911 material names PCM but does not disclose the complete underlying 911 operating-system stack.</div>
+          <div class="stack-list">
+            <div class="stack-row"><i>01</i><div><b>Porsche Driver Experience</b><span>Driver-focused controls, digital cluster and fast access to core functions.</span></div></div>
+            <div class="stack-row"><i>02</i><div><b>PCM</b><span>Central infotainment layer, navigation, audio, apps and vehicle settings.</span></div></div>
+            <div class="stack-row"><i>03</i><div><b>Porsche Connect</b><span>Online services, remote features, real-time traffic and account services.</span></div></div>
+            <div class="stack-row"><i>04</i><div><b>Phone ecosystems</b><span>Wireless Apple CarPlay and Android Auto, with deeper CarPlay integration.</span></div></div>
+            <div class="stack-row"><i>05</i><div><b>Vehicle ECUs</b><span>Dedicated control units manage engine, transmission, chassis, climate and safety functions.</span></div></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="process">
+      <div class="section-head reveal">
+        <div><div class="eyebrow">04 / SOFTWARE DEVELOPMENT</div><h2>How automotive code earns trust.</h2></div>
+        <p>Porsche Engineering publicly discusses Automotive SPICE, ISO 26262 and a V-model workflow. The exact 911 IDEs, source code, programming languages and proprietary toolchain are not publicly listed.</p>
+      </div>
+      <div class="process" aria-label="Publicly described automotive software development process">
+        <div class="process-step reveal"><i>01</i><b>System requirements</b><span>Define the vehicle function, constraints and safety goals.</span></div>
+        <div class="process-step reveal delay-1"><i>02</i><b>Architecture</b><span>Split behaviour across software, networks and electronic control units.</span></div>
+        <div class="process-step reveal delay-2"><i>03</i><b>Software design</b><span>Turn requirements into components and implementation detail.</span></div>
+        <div class="process-step reveal delay-3"><i>04</i><b>Unit testing</b><span>Check small software units before they meet the full vehicle.</span></div>
+        <div class="process-step reveal"><i>05</i><b>Integration</b><span>Combine components and test communication across systems.</span></div>
+        <div class="process-step reveal delay-1"><i>06</i><b>Qualification</b><span>Validate the software against requirements and safety expectations.</span></div>
+        <div class="process-step reveal delay-2"><i>07</i><b>Updates</b><span>PCM supports online software and map updates after delivery.</span></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head reveal">
+        <div><div class="eyebrow">05 / DETAILS</div><h2>Designed from every angle.</h2></div>
+        <p>Real press photographs and technical imagery give the site substance. Each frame fades, sharpens and moves subtly rather than pretending to be a full 3D model.</p>
+      </div>
+      <div class="gallery">
+        <figure class="reveal"><img src="https://newsroom.porsche.com/.imaging/mte/porsche-templating-theme/image_1290x726/dam/pnr/2024/Products/992-II/0840_nevada_coupe_u-crane_AKOS0607_edit_V03-sky.jpg/jcr%3Acontent/0840_nevada_coupe_u-crane_AKOS0607_edit_V03-sky.jpg" data-fallback="assets/fallback-hero.jpg" alt="Porsche 911 Carrera GTS driving on an open road at sunset" /><figcaption>Motion / shape that refuses to age</figcaption></figure>
+        <figure class="reveal delay-1"><img src="https://newsroom.porsche.com/.imaging/mte/porsche-templating-theme/teaser_720x406x2/dam/pnr/2024/Products/992-II/Studio/24_PAG_G188_911_Vorshooting_1012_Energy__A3_RGB.jpg/jcr%3Acontent/24_PAG_G188_911_Vorshooting_1012_Energy__A3_RGB.jpg" data-fallback="assets/fallback-interface.jpg" alt="Digital cockpit of the Porsche 911 Carrera GTS" /><figcaption>Digital cockpit / driver-first interface</figcaption></figure>
+        <figure class="reveal delay-2"><img src="https://newsroom.porsche.com/.imaging/mte/porsche-templating-theme/teaser_720x406x2/dam/pnr/2024/Products/992-II/Studio/24_PAG_G188_911_Vorshooting_1008__A3_RGB.jpg/jcr%3Acontent/24_PAG_G188_911_Vorshooting_1008__A3_RGB.jpg" data-fallback="assets/fallback-detail.jpg" alt="Active aerodynamic front air flaps on a Porsche 911 Carrera GTS" /><figcaption>Active aero / cooling only when needed</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="section" id="legacy">
+      <div class="section-head reveal">
+        <div><div class="eyebrow">06 / LEGACY</div><h2>Evolution, not replacement.</h2></div>
+        <p>The 911 keeps its core silhouette and rear-engine identity while each generation rewrites the technology beneath it.</p>
+      </div>
+      <div class="timeline">
+        <div class="timeline-row reveal"><time>1963</time><b>Original 911 revealed</b><p>The basic formula arrives: compact sports car, rear-mounted flat-six and a shape that becomes instantly recognisable.</p></div>
+        <div class="timeline-row reveal"><time>2019</time><b>992 generation</b><p>A wider, more digital 911 enters production while preserving the architecture and visual language of the original.</p></div>
+        <div class="timeline-row reveal"><time>2021</time><b>PCM 6.0</b><p>The 911 gains expanded connectivity, natural-language voice control, Android Auto and over-the-air update capability.</p></div>
+        <div class="timeline-row reveal"><time>2024</time><b>992.2 and T-Hybrid</b><p>The Carrera GTS introduces a performance-focused hybrid system and the 911 receives its first fully digital instrument cluster.</p></div>
+        <div class="timeline-row reveal"><time>2025+</time><b>Revised digital ecosystem</b><p>More powerful PCM hardware, Porsche App Center access, expanded Connect features and deeper digital integration arrive across the model range.</p></div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-grid">
+        <div>
+          <b style="color:#aaa5a0">Independent interactive automotive study.</b><br />
+          Not affiliated with, sponsored by or endorsed by Dr. Ing. h.c. F. Porsche AG. PORSCHE, 911, PCM and related marks belong to their respective owners. Specifications vary by model, market and equipment. The technical focus is the current 911 Carrera GTS T-Hybrid; imagery may show other current 911 variants.
+        </div>
+        <div class="credits">
+          Technical information: Porsche Newsroom.<br />
+          Selected press imagery: Porsche AG; red hero reference: Motozite.<br />
+          Remote photographs require an internet connection. Local fallback artwork is included.
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    const $ = (s, root=document) => root.querySelector(s);
+    const $$ = (s, root=document) => [...root.querySelectorAll(s)];
+
+    // Photo fallback keeps the project usable when remote editorial images are unavailable.
+    $$('img[data-fallback]').forEach(img => {
+      img.addEventListener('error', () => {
+        if (img.dataset.fallback && !img.dataset.fallbackUsed) {
+          img.dataset.fallbackUsed = '1';
+          img.src = img.dataset.fallback;
+        }
+      });
+    });
+
+    // Boot sequence.
+    window.addEventListener('load', () => setTimeout(() => $('#boot').classList.add('done'), 2450));
+    setTimeout(() => $('#boot').classList.add('done'), 4200);
+
+    // Accent switcher.
+    $('#themeToggle').addEventListener('click', () => {
+      const root = document.documentElement;
+      const next = root.dataset.theme === 'red' ? 'pink' : 'red';
+      root.dataset.theme = next;
+      $('#themeLabel').textContent = next === 'red' ? 'Pink mode' : 'Red mode';
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', next === 'red' ? '#09090b' : '#100811');
+    });
+
+    // Scroll progress + active navigation.
+    const sections = $$('main section[id]');
+    const navLinks = $$('.nav-links a');
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      $('#progress').style.width = `${max > 0 ? scrollY / max * 100 : 0}%`;
+      let current = '';
+      sections.forEach(section => { if (scrollY >= section.offsetTop - 160) current = section.id; });
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${current}`));
+    };
+    addEventListener('scroll', onScroll, { passive:true }); onScroll();
+
+    // Scroll reveal.
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('in'); });
+    }, { threshold:.12, rootMargin:'0px 0px -30px' });
+    $$('.reveal').forEach(el => observer.observe(el));
+
+    // Engine sound synthesis. It is intentionally abstract, not a recording.
+    let audioCtx, oscA, oscB, noiseSource, master, filter, revTimer, rpm = 900, engineRunning = false;
+    const ensureAudio = () => {
+      if (audioCtx) return;
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      master = audioCtx.createGain(); master.gain.value = 0;
+      filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 950;
+      oscA = audioCtx.createOscillator(); oscA.type = 'sawtooth';
+      oscB = audioCtx.createOscillator(); oscB.type = 'square';
+      const gA = audioCtx.createGain(); gA.gain.value = .065;
+      const gB = audioCtx.createGain(); gB.gain.value = .018;
+      oscA.connect(gA).connect(filter); oscB.connect(gB).connect(filter);
+      const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 2, audioCtx.sampleRate);
+      const d = buffer.getChannelData(0); for (let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*.22;
+      noiseSource = audioCtx.createBufferSource(); noiseSource.buffer=buffer; noiseSource.loop=true;
+      const ng = audioCtx.createGain(); ng.gain.value=.025; noiseSource.connect(ng).connect(filter);
+      filter.connect(master).connect(audioCtx.destination);
+      oscA.start(); oscB.start(); noiseSource.start(); setRPM(900);
+    };
+    const setRPM = value => {
+      rpm = Math.max(800, Math.min(7600, value));
+      $('#rpmReadout').textContent = `${Math.round(rpm/50)*50} RPM`;
+      $('#revFill').style.width = `${Math.max(5,(rpm/7600)*100)}%`;
+      if (!audioCtx) return;
+      const base = 38 + rpm/43;
+      oscA.frequency.setTargetAtTime(base, audioCtx.currentTime, .04);
+      oscB.frequency.setTargetAtTime(base*.5, audioCtx.currentTime, .04);
+      filter.frequency.setTargetAtTime(520 + rpm*.23, audioCtx.currentTime, .05);
+    };
+    const engineOn = async () => {
+      ensureAudio(); await audioCtx.resume();
+      engineRunning = true; $('#heroMedia').classList.add('engine-on'); $('#engineStatus').textContent='ENGINE READY';
+      master.gain.cancelScheduledValues(audioCtx.currentTime);
+      master.gain.setValueAtTime(0,audioCtx.currentTime); master.gain.linearRampToValueAtTime(.34,audioCtx.currentTime+.14);
+      setRPM(2800); setTimeout(()=>setRPM(1150),520);
+    };
+    const engineOff = () => {
+      if (!audioCtx) return;
+      engineRunning=false; $('#heroMedia').classList.remove('engine-on'); $('#engineStatus').textContent='ENGINE OFF';
+      master.gain.setTargetAtTime(0,audioCtx.currentTime,.1); setRPM(900);
+    };
+    $('#startBtn').addEventListener('click', async () => {
+      if (engineRunning) { engineOff(); $('#startBtn').textContent='Start engine'; }
+      else { await engineOn(); $('#startBtn').textContent='Stop engine'; }
+    });
+    const startRev = async e => {
+      e.preventDefault(); if (!engineRunning) await engineOn();
+      clearInterval(revTimer); revTimer=setInterval(()=>setRPM(rpm+235),55);
+      $('#revBtn').textContent='REVVING…';
+    };
+    const stopRev = e => {
+      if (e) e.preventDefault(); clearInterval(revTimer); revTimer=null;
+      const settle=setInterval(()=>{ setRPM(rpm-(rpm-1100)*.16); if(rpm<1180){clearInterval(settle);setRPM(1100);} },45);
+      $('#revBtn').textContent='Hold to rev';
+    };
+    ['pointerdown','touchstart'].forEach(ev=>$('#revBtn').addEventListener(ev,startRev,{passive:false}));
+    ['pointerup','pointercancel','pointerleave','touchend'].forEach(ev=>$('#revBtn').addEventListener(ev,stopRev,{passive:false}));
+
+    // Interactive engineering map.
+    const parts = {
+      engine:{index:'01 / POWER UNIT',title:'3.6-litre boxer six',body:'The horizontally opposed engine keeps the mass low and compact at the rear. In the Carrera GTS T-Hybrid, Porsche pairs it with an electrically assisted turbocharger and an electric motor inside the PDK transmission.',facts:[['Layout','Rear-mounted flat-six'],['Output','357 kW engine / 398 kW system'],['Character','Fast response, low centre of gravity']]},
+      pdk:{index:'02 / TRANSMISSION',title:'Eight-speed PDK',body:'Porsche Doppelkupplung changes gears with two clutches so the next ratio can be prepared before it is selected. The GTS places a permanently excited synchronous motor inside the reinforced transmission.',facts:[['Type','Dual-clutch transmission'],['Hybrid motor','Up to 40 kW'],['Purpose','Fast shifts + immediate torque']]},
+      axle:{index:'03 / HYBRID SYSTEM',title:'Compact 400-volt network',body:'The lightweight high-voltage battery is comparable in size and weight to a conventional starter battery. It supports the electric turbo and transmission motor without turning the 911 into a plug-in hybrid.',facts:[['Battery','1.9 kWh gross'],['Voltage','400 V'],['Goal','Performance with controlled weight']]},
+      brakes:{index:'04 / CHASSIS',title:'Control before speed',body:'Adaptive damping, rear-axle steering and available dynamic chassis control help the 911 remain stable at speed while retaining agility in tighter corners.',facts:[['Damping','PASM adaptive control'],['Steering','Rear-axle steering'],['Balance','Traction from rear-engine layout']]},
+      aero:{index:'05 / AIRFLOW',title:'Active cooling and aero',body:'Vertical front air flaps and underbody diffusors change position according to cooling demand. Closed flaps reduce drag; open flaps send more air to the radiators during hard driving.',facts:[['Front','Active cooling flaps'],['Underbody','Adaptive diffusors'],['Result','Cooling when needed, lower drag otherwise']]}
+    };
+    $$('.hotspot').forEach((btn,i)=>btn.addEventListener('click',()=>{
+      $$('.hotspot').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+      const p=parts[btn.dataset.part]; $('#partIndex').textContent=p.index; $('#partTitle').textContent=p.title; $('#partBody').textContent=p.body;
+      $('#partFacts').innerHTML=p.facts.map(([a,b])=>`<div class="fact"><span>${a}</span><b>${b}</b></div>`).join('');
+      $('#technicalMedia').classList.add('active'); setTimeout(()=>$('#technicalMedia').classList.remove('active'),420);
+    }));
+
+    // Rear deck reveal.
+    $('#deckBtn').addEventListener('click',()=>{
+      const open=$('#deckView').classList.toggle('open'); $('#deckBtn').textContent=open?'Close rear deck':'Open rear deck';
+      $('#deckBtn').setAttribute('aria-expanded',String(open)); $('#deckLabel').textContent=open?'POWER UNIT EXPOSED':'BODY SEALED';
+    });
+
+    // PCM demo.
+    const pcm = {
+      home:{mode:'HOME / DRIVER PROFILE',title:'Good evening.',tiles:[['Navigation','Online route guidance + traffic'],['Media','Native streaming and connected audio'],['Vehicle','Drive, chassis and assistance settings'],['My Porsche','Porsche ID and remote services']]},
+      drive:{mode:'DRIVE / SPORT CHRONO',title:'Choose your response.',tiles:[['Normal','Balanced road settings'],['Sport','Sharper throttle and PDK logic'],['Sport Plus','Maximum performance calibration'],['Individual','Your selected configuration']]},
+      apps:{mode:'APPS / CONNECTED ECOSYSTEM',title:'Your services, in the car.',tiles:[['App Center','Compatible third-party apps'],['Apple CarPlay','Wireless phone ecosystem'],['Android Auto','Wireless smartphone mirroring'],['Streaming','Music and parked video services']]},
+      system:{mode:'SYSTEM / CONNECT CARE',title:'Ready for the next road.',tiles:[['Updates','Online software and map updates'],['Diagnostics','Maintenance and repair detection'],['Voice','Natural-language vehicle control'],['Privacy','Profiles and data permissions']]}
+    };
+    $$('.pcm-tab').forEach(tab=>tab.addEventListener('click',()=>{
+      $$('.pcm-tab').forEach(t=>t.classList.remove('active')); tab.classList.add('active'); const d=pcm[tab.dataset.pcm];
+      $('#pcmMode').textContent=d.mode; $('#pcmTitle').textContent=d.title; $('#pcmTiles').innerHTML=d.tiles.map((t,i)=>`<button class="pcm-tile ${i===0?'active':''}" type="button"><b>${t[0]}</b><small>${t[1]}</small></button>`).join('');
+    }));
+    const updateClock=()=>{const d=new Date(); $('#pcmClock').textContent=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}; updateClock(); setInterval(updateClock,30000);
+  </script>
+</body>
+</html>
